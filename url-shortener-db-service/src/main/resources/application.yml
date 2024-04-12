@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: url-shortener-db-service
+  data:
+    mongodb:
+      uri: mongodb+srv://myzticbean:DdTsYpw6STuyZRON@url-shortener-db.62snamn.mongodb.net/?retryWrites=true&w=majority&appName=url-shortener-db
+      database: url-shortener-db
+
+server:
+  port: 8082
