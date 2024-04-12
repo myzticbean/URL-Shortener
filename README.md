@@ -1,2 +1,2 @@
-# URL-shortener
+# URL shortener
 An URL shortener application
