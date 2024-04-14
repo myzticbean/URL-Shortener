@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor
-public class ShortenUrlRequest {
-
-    private String urlToForward;
-    private Long expiryDays;
-
+public class AddShortenedUrlResponse {
+    private ShortenedUrl shortenedUrl;
+    private boolean created;
 }
