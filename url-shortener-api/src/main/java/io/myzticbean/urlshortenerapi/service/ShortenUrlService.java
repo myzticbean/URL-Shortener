@@ -16,6 +16,7 @@ import java.util.UUID;
 @Service
 public class ShortenUrlService {
 
+    public final long VERY_LARGE_EXPIRY = 999999L;
     private final Logger logger = LogManager.getLogger(ShortenUrlService.class);
 
     private final UrlShortenerDBServiceClient dbServiceClient;
@@ -41,8 +42,8 @@ public class ShortenUrlService {
     private String generateShortCodeFromUUID() {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String shortCode = Base64Util.encodeToBase62(uuid).substring(0, SHORT_CODE_LENGTH);
-        logger.warn("New ShortCode created: {}", shortCode);
-        shortCode = "MTMyOTZkOG";
+        logger.info("New ShortCode created: {}", shortCode);
+        shortCode = "MzkzMDY1Mj";
         return shortCode;
     }
 
@@ -65,8 +66,8 @@ public class ShortenUrlService {
 
     /**
      * SCENARIO 1: If shortcode exists and url also matches -> No issues -> Return the same details as response;
-     * SCENARIO 2: If shortcode doesn't exist but url exists -> No issues -> Return the url with the existing short code
-     * SCENARIO 2: If shortcode exists and url different -> shortcode collision -> generate new shortcode (3 retries)
+     * SCENARIO 2: If shortcode doesn't exist but url exists -> No issues -> Return the url with the existing short code;
+     * SCENARIO 3: If shortcode exists and url different -> shortcode collision -> generate new shortcode (3 retries)
      * @param response Response
      */
     private ShortenUrlResponse processAddShortenedUrlResponseForCollision(
@@ -75,37 +76,34 @@ public class ShortenUrlService {
             AddShortenedUrlResponse responseBody  = response.getBody();
             if(responseBody != null && responseBody.getShortenedUrl() != null) {
                 ShortenedUrl shortenedUrl = responseBody.getShortenedUrl();
-                boolean isShortCodeMatch = shortenedUrl.getShortCode() != null && shortenedUrl.getShortCode().equals(request.getShortCode());
+                boolean isShortCodeMatch = checkShortCodeMatch(request, shortenedUrl);
                 boolean isFullUrlMatch = shortenedUrl.getFullUrl() != null && shortenedUrl.getFullUrl().equals(request.getFullUrl());
                 if(isShortCodeMatch && isFullUrlMatch) {
                     // SCENARIO 1
+                    logger.info("ShortCode exists and url also matches -> Returning the same details as response");
                     return mapToDto(responseBody, null);
                 } else if(!isShortCodeMatch && isFullUrlMatch) {
                     // SCENARIO 2
+                    logger.info("ShortCode doesn't exist but url exists -> Returning the url with the existing short code");
                     return mapToDto(
                             new AddShortenedUrlResponse(
-                                    response.getBody().getShortenedUrl(), false, true),
+                                    responseBody.getShortenedUrl(), false, true),
                             null);
-                } else if(!isShortCodeMatch) {
+                } else if(isShortCodeMatch) {
                     // SCENARIO 3
                     retryCounter.set(0);
                     while(retryCounter.get() < SHORT_CODE_COLLISION_RETRY_COUNT
-                            && response.getStatusCode().equals(HttpStatus.OK)) {
-                        // check if url also collided -> Then ALL GOOD -> Url already exists with same short code (somehow?)
-                        if(!responseBody.getShortenedUrl().getFullUrl().equals(request.getShortCode())) {
-                            // Url did not collide; only short code collided -> Need a new short code
-                            retryCounter.set(retryCounter.get() + 1);
-                            response = dbServiceClient.addShortCodeToDB(request);
-                            if(response.getStatusCode() == HttpStatus.CREATED) {
-                                // new short code was created -> break out of loop
-                                break;
-                            }
-                        } else {
-                            // new short code was created -> break out of loop
-                            break;
-                        }
+                            && response.getStatusCode().equals(HttpStatus.OK)
+                            && checkShortCodeMatch(request, responseBody.getShortenedUrl())) {
+                        retryCounter.set(retryCounter.get() + 1);
+                        response = dbServiceClient.addShortCodeToDB(request);
+                        logger.warn("Retry #" + retryCounter.get() + " >> DB call to add shortCode returned HttpStatus: {}", response.getStatusCode());
                     }
-                    return mapToDto(response.getBody(), null);
+                    if(retryCounter.get() >= SHORT_CODE_COLLISION_RETRY_COUNT) {
+                        return mapToDto(response.getBody(), "Could not add the url, short code collision retry exceeded");
+                    } else {
+                        return mapToDto(response.getBody(), null);
+                    }
                 }
             }
         } catch (UrlShortenerException e) {
@@ -114,6 +112,10 @@ public class ShortenUrlService {
             retryCounter.remove();
         }
         return null;
+    }
+
+    private static boolean checkShortCodeMatch(AddShortenedUrlRequest request, ShortenedUrl shortenedUrl) {
+        return shortenedUrl.getShortCode() != null && shortenedUrl.getShortCode().equals(request.getShortCode());
     }
 
     private ShortenUrlResponse mapToDto(AddShortenedUrlResponse responseBody, String errorMessage) throws UrlShortenerException {
@@ -148,9 +150,7 @@ public class ShortenUrlService {
     private AddShortenedUrlRequest mapToAddShortenedUrlRequest(ShortenUrlRequest shortenUrlRequest) {
         AddShortenedUrlRequest addShortenedUrlRequest = new AddShortenedUrlRequest();
         addShortenedUrlRequest.setFullUrl(shortenUrlRequest.getUrlToForward());
-        addShortenedUrlRequest.setExpiresAfterInDays(shortenUrlRequest.getExpiryDays());
+        addShortenedUrlRequest.setExpiresAfterInDays((shortenUrlRequest.getExpiryDays() == 0 ? VERY_LARGE_EXPIRY : shortenUrlRequest.getExpiryDays()));
         return addShortenedUrlRequest;
     }
-
-
 }

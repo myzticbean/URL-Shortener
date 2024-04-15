@@ -46,4 +46,9 @@ public class DBController {
             return new ResponseEntity<>(GetShortenedUrlResponse.builder().shortenedUrl(shortenedUrl).build(), HttpStatus.OK);
     }
 
+    @PostMapping("/addToMetrics")
+    public ResponseEntity<String> addToMetrics(@RequestBody AddShortenedUrlRequest dbServiceRequest) {
+        return null;
+    }
+
 }
