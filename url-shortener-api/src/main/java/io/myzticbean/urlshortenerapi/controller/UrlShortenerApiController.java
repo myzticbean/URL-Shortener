@@ -1,6 +1,5 @@
 package io.myzticbean.urlshortenerapi.controller;
 
-import io.myzticbean.urlshortenerapi.UrlShortenerApiApplication;
 import io.myzticbean.urlshortenerapi.dto.ShortenUrlRequest;
 import io.myzticbean.urlshortenerapi.dto.ShortenUrlResponse;
 import io.myzticbean.urlshortenerapi.service.ShortenUrlService;

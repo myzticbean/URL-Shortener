@@ -17,6 +17,6 @@ public interface UrlShortenerDBServiceClient {
     ResponseEntity<GetShortenedUrlResponse> getShortenedUrl(@PathVariable String shortCode);
 
     @PostMapping("/add")
-    ResponseEntity<AddShortenedUrlResponse> addToDB(@RequestBody AddShortenedUrlRequest dbServiceRequest);
+    ResponseEntity<AddShortenedUrlResponse> addShortCodeToDB(@RequestBody AddShortenedUrlRequest dbServiceRequest);
 
 }

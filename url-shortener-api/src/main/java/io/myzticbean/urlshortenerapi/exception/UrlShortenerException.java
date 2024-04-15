@@ -1,9 +1,10 @@
-package io.myzticbean.urlshortenerdbservice.exception;
+package io.myzticbean.urlshortenerapi.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor @AllArgsConstructor
-public class DBServiceException extends RuntimeException {
+public class UrlShortenerException extends RuntimeException {
+
     private String errorMessage;
 }

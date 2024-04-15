@@ -11,4 +11,6 @@ public interface UrlShortenedRepository extends MongoRepository<ShortenedUrl, St
 
     List<ShortenedUrl> findByShortCode(String shortCode);
 
+    List<ShortenedUrl> findByFullUrl(String url);
+
 }

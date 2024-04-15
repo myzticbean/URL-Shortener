@@ -9,4 +9,5 @@ import lombok.Setter;
 public class AddShortenedUrlResponse {
     private ShortenedUrl shortenedUrl;
     private boolean created;
+    private boolean duplicateUrl;
 }

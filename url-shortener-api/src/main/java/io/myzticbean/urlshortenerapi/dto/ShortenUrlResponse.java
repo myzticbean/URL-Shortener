@@ -1,11 +1,17 @@
 package io.myzticbean.urlshortenerapi.dto;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+@Getter @Setter @AllArgsConstructor
 public class ShortenUrlResponse {
 
     private String shortenedUrlShortcode;
-    private Date createdAt;
-    private Date expiresOn;
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresOn;
+    private String errorMessage;
 
 }
