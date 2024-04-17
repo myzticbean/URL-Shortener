@@ -1,10 +1,12 @@
 package io.myzticbean.urlshortenerapi.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
 public class UrlShortenerException extends RuntimeException {
-
     private String errorMessage;
+
+    public UrlShortenerException(String errorMessage) {
+        super(errorMessage);
+    }
 }

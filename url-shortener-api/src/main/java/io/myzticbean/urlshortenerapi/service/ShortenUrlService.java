@@ -16,11 +16,11 @@ import java.util.UUID;
 @Service
 public class ShortenUrlService {
 
-    public final long VERY_LARGE_EXPIRY = 999999L;
     private final Logger logger = LogManager.getLogger(ShortenUrlService.class);
 
     private final UrlShortenerDBServiceClient dbServiceClient;
 
+    public final long VERY_LARGE_EXPIRY = 999999L;
     private final int SHORT_CODE_LENGTH = 10;
     private final int SHORT_CODE_COLLISION_RETRY_COUNT = 3;
 
@@ -43,7 +43,7 @@ public class ShortenUrlService {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String shortCode = Base64Util.encodeToBase62(uuid).substring(0, SHORT_CODE_LENGTH);
         logger.info("New ShortCode created: {}", shortCode);
-        shortCode = "MzkzMDY1Mj";
+//        shortCode = "MzkzMDY1Mj";
         return shortCode;
     }
 
