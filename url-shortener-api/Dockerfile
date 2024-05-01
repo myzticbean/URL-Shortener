@@ -13,8 +13,8 @@ RUN mvn install -DskipTests
 # Copy the application classes and resources
 COPY target/*.jar app.jar
 
-# Expose the port where your application listens (replace 8080 with your actual port)
-EXPOSE 8080
+# Expose the port where your application listens
+EXPOSE 8090
 
 # Start the application by running the JAR file
 ENTRYPOINT ["java", "-jar", "app.jar"]

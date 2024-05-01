@@ -3,7 +3,7 @@ spring:
     name: url-shortener-db-service
   data:
     mongodb:
-      uri: mongodb+srv://myzticbean:DdTsYpw6STuyZRON@url-shortener-db.62snamn.mongodb.net/?retryWrites=true&w=majority&appName=url-shortener-db
+      uri: mongodb+srv://myzticbean:DdTsYpw6STuyZRON@url-shortener-db.62snamn.mongodb.net/?retryWrites=true&w=majority&appName=url-shortener-db&ssl=true
       database: url-shortener-db
 
 server:

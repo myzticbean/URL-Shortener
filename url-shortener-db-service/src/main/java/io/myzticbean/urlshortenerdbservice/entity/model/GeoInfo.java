@@ -9,19 +9,17 @@ import java.math.BigInteger;
 @Getter @Setter @NoArgsConstructor
 public class GeoInfo {
 
-    // This will be the unique identifier
-    private String ipAddress;
     private String city;
+    private String country;
     private String latitude;
     private String longitude;
-    // Visit count from this IP address
     private BigInteger visitCount;
 
     @Override
     public String toString() {
         return "GeoInfo [" +
-                "ipAddress='" + ipAddress + '\'' +
-                ", city='" + city + '\'' +
+                "city='" + city + '\'' +
+                ", country='" + country + '\'' +
                 ", latitude='" + latitude + '\'' +
                 ", longitude='" + longitude + '\'' +
                 ", visitCount=" + visitCount +
