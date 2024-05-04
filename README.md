@@ -21,3 +21,20 @@ It's a URL shortener application developed using Java, Spring Boot and MongoDB.
 - [ ] Implement service discovery and load balancing
 - [ ] Implement circuit breaker using Resilience4J
 - [ ] Implement API security
+
+## Kafka Installation using Brew on MacOS
+Run this command in terminal:
+```shell
+$ brew install kafka
+```
+This will install Zookeeper and then Kafka. To start Kafka, Zookeeper must be running. 
+Run below commands:
+```shell
+$ brew services start zookeeper
+$ brew services start kafka
+```
+To stop the services, run below commands:
+```shell
+$ brew services stop kafka
+$ brew services stop zookeeper
+```
