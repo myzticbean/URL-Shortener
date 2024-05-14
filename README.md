@@ -24,7 +24,7 @@ This project aims to simplify the sharing and tracking of URLs, making them easi
 - [ ] Activate deactivated shortcode if new add-url-request comes for existing deactivated url
 ### DB Service
 - [ ] Setup endpoint to process add-metrics
-- [ ] Add logic to save URL metrics to DB
+- [x] Add logic to save URL metrics to DB
 ### Metrics Service
 - [x] Setup metrics service
 - [x] Setup Kafka service to consume add-metrics messages from url-shortener-service
