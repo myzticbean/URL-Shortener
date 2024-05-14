@@ -22,6 +22,8 @@ public class UrlShortenerApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		kafkaProducerService.sendMessage("This is a test message");
+		for(int i = 0; i < 100; i++) {
+			kafkaProducerService.sendMessage("[" + (i+1) + "] This is a test message");
+		}
 	}
 }

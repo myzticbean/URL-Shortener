@@ -1,11 +1,11 @@
 package io.myzticbean.urlshortenerdbservice.controller;
 
-import io.myzticbean.urlshortenerdbservice.dto.AddShortenedUrlRequest;
-import io.myzticbean.urlshortenerdbservice.dto.AddShortenedUrlResponse;
-import io.myzticbean.urlshortenerdbservice.dto.GetShortenedUrlResponse;
+import io.myzticbean.urlshortenerdbservice.dto.*;
 import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrl;
 import io.myzticbean.urlshortenerdbservice.exception.DBServiceException;
 import io.myzticbean.urlshortenerdbservice.service.DBService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,14 @@ public class DBController {
 
     private final String NO_RESULTS_ERROR_MSG = "No results found";
 
+    private static final Logger logger = LogManager.getLogger(DBController.class);
+
     public DBController(DBService dbService) {
         this.dbService = dbService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<AddShortenedUrlResponse> addToDB(@RequestBody AddShortenedUrlRequest dbServiceRequest) {
+    @PostMapping("/save-url")
+    public ResponseEntity<AddShortenedUrlResponse> saveUrlHandler(@RequestBody SaveShortenedUrlRequest dbServiceRequest) {
         try {
             AddShortenedUrlResponse dbServiceResponse = dbService.createShortenedUrlIfNotExist(dbServiceRequest);
             if(dbServiceResponse.isCreated())
@@ -46,9 +48,24 @@ public class DBController {
             return new ResponseEntity<>(GetShortenedUrlResponse.builder().shortenedUrl(shortenedUrl).build(), HttpStatus.OK);
     }
 
-    @PostMapping("/addToMetrics")
-    public ResponseEntity<String> addToMetrics(@RequestBody AddShortenedUrlRequest dbServiceRequest) {
-        return null;
+    @PostMapping("/save-metrics")
+    public ResponseEntity<SaveMetricsResponse> saveMetricsHandler(@RequestBody SaveMetricsRequest saveMetricsRequest) {
+        try {
+            SaveMetricsResponse response = dbService.saveMetrics(saveMetricsRequest);
+            if(response != null && response.getVisitInfos() != null) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else if(response != null && response.getError() != null) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch(DBServiceException e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

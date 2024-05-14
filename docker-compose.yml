@@ -4,7 +4,7 @@ services:
   url-shortener-api:
     build: ./url-shortener-api  # Path to your Dockerfile for the API service
     ports:
-      - "8080:8080"  # Map container port 8080 to host port 8080
+      - "8090:8090"  # Map container port 8080 to host port 8080
 
   url-shortener-db-service:
     build: ./url-shortener-db-service  # Path to your Dockerfile for the DB service

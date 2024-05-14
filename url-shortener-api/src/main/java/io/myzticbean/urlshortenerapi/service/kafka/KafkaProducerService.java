@@ -1,6 +1,5 @@
 package io.myzticbean.urlshortenerapi.service.kafka;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ public class KafkaProducerService {
     @Value("${url-shortener-metrics-api.kafka-topic}")
     private String topic;
 
-    @Autowired
     public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }

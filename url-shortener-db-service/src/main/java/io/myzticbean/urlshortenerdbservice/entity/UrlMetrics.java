@@ -1,24 +1,20 @@
 package io.myzticbean.urlshortenerdbservice.entity;
 
 import io.myzticbean.urlshortenerdbservice.entity.model.VisitInfo;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
+import java.util.Set;
 
 @Document(collection = "url-metrics")
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class UrlMetrics {
 
     @Id
     private String id;
-
     private String shortCode;
-
-    private List<VisitInfo> visitInfos;
+    private Set<VisitInfo> visitInfos;
 
     @Override
     public String toString() {

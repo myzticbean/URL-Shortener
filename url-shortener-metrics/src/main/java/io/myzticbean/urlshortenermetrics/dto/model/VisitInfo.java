@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class VisitInfo {
 
     private String ipAddress;
     private GeoInfo geoInfo;
 
+    @Override
     public String toString() {
         return "VisitInfo [ipAddress=" + ipAddress + ", geoInfo=" + geoInfo + "]";
     }
