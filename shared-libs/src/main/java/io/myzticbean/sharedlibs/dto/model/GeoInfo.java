@@ -1,4 +1,4 @@
-package io.myzticbean.urlshortenerdbservice.entity.model;
+package io.myzticbean.sharedlibs.dto.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

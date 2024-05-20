@@ -1,6 +1,6 @@
 package io.myzticbean.urlshortenerdbservice.entity;
 
-import io.myzticbean.urlshortenerdbservice.entity.model.VisitInfo;
+import io.myzticbean.sharedlibs.dto.model.VisitInfo;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

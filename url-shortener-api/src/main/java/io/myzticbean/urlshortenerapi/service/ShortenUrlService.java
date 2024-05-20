@@ -2,7 +2,7 @@ package io.myzticbean.urlshortenerapi.service;
 
 import io.myzticbean.urlshortenerapi.dto.*;
 import io.myzticbean.urlshortenerapi.exception.UrlShortenerException;
-import io.myzticbean.urlshortenerapi.feignclient.UrlShortenerDBServiceClient;
+import io.myzticbean.urlshortenerapi.feignclient.DBServiceFeignClient;
 import io.myzticbean.urlshortenerapi.util.Base64Util;
 import jakarta.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +18,7 @@ public class ShortenUrlService {
 
     private final Logger logger = LogManager.getLogger(ShortenUrlService.class);
 
-    private final UrlShortenerDBServiceClient dbServiceClient;
+    private final DBServiceFeignClient dbServiceClient;
 
     public final long VERY_LARGE_EXPIRY = 999999L;
     private final int SHORT_CODE_LENGTH = 10;
@@ -26,7 +26,7 @@ public class ShortenUrlService {
 
     private ThreadLocal<Integer> retryCounter = new ThreadLocal<>();
 
-    public ShortenUrlService(UrlShortenerDBServiceClient dbServiceClient) {
+    public ShortenUrlService(DBServiceFeignClient dbServiceClient) {
         this.dbServiceClient = dbServiceClient;
     }
 

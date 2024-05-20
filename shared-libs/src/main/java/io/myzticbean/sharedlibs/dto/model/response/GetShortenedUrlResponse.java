@@ -1,7 +1,7 @@
-package io.myzticbean.urlshortenerdbservice.dto;
+package io.myzticbean.sharedlibs.dto.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

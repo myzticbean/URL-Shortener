@@ -1,7 +1,12 @@
 package io.myzticbean.urlshortenerdbservice.controller;
 
-import io.myzticbean.urlshortenerdbservice.dto.*;
-import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.request.SaveMetricsRequest;
+import io.myzticbean.sharedlibs.dto.model.request.SaveShortenedUrlRequest;
+import io.myzticbean.sharedlibs.dto.model.response.GetShortenedUrlResponse;
+import io.myzticbean.sharedlibs.dto.model.response.SaveMetricsResponse;
+import io.myzticbean.sharedlibs.dto.model.response.SaveShortenedUrlResponse;
+import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrlDAO;
 import io.myzticbean.urlshortenerdbservice.exception.DBServiceException;
 import io.myzticbean.urlshortenerdbservice.service.DBService;
 import org.apache.logging.log4j.LogManager;
@@ -25,9 +30,10 @@ public class DBController {
     }
 
     @PostMapping("/save-url")
-    public ResponseEntity<AddShortenedUrlResponse> saveUrlHandler(@RequestBody SaveShortenedUrlRequest dbServiceRequest) {
+    public ResponseEntity<
+            SaveShortenedUrlResponse> saveUrlHandler(@RequestBody SaveShortenedUrlRequest dbServiceRequest) {
         try {
-            AddShortenedUrlResponse dbServiceResponse = dbService.createShortenedUrlIfNotExist(dbServiceRequest);
+            SaveShortenedUrlResponse dbServiceResponse = dbService.createShortenedUrlIfNotExist(dbServiceRequest);
             if(dbServiceResponse.isCreated())
                 return new ResponseEntity<>(dbServiceResponse, HttpStatus.CREATED);
             else
@@ -41,11 +47,16 @@ public class DBController {
 
     @GetMapping("/get/{shortCode}")
     public ResponseEntity<GetShortenedUrlResponse> getShortenedUrl(@PathVariable String shortCode) {
-        ShortenedUrl shortenedUrl = dbService.findFirstByShortCode(shortCode);
-        if(shortenedUrl == null)
-            return new ResponseEntity<>(GetShortenedUrlResponse.builder().error(NO_RESULTS_ERROR_MSG).build(), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(GetShortenedUrlResponse.builder().shortenedUrl(shortenedUrl).build(), HttpStatus.OK);
+        try {
+            ShortenedUrl shortenedUrl = dbService.findFirstByShortCode(shortCode);
+            if(shortenedUrl == null)
+                return new ResponseEntity<>(GetShortenedUrlResponse.builder().error(NO_RESULTS_ERROR_MSG).build(), HttpStatus.OK);
+            else
+                return new ResponseEntity<>(GetShortenedUrlResponse.builder().shortenedUrl(shortenedUrl).build(), HttpStatus.OK);
+        } catch (DBServiceException e) {
+            logger.error(e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/save-metrics")

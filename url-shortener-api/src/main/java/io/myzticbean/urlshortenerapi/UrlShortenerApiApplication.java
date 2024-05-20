@@ -1,5 +1,6 @@
 package io.myzticbean.urlshortenerapi;
 
+import io.myzticbean.sharedlibs.dto.model.request.AddMetricsRequest;
 import io.myzticbean.urlshortenerapi.service.kafka.KafkaProducerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +24,7 @@ public class UrlShortenerApiApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		for(int i = 0; i < 100; i++) {
-			kafkaProducerService.sendMessage("[" + (i+1) + "] This is a test message");
+			kafkaProducerService.sendMessage(new AddMetricsRequest());
 		}
 	}
 }

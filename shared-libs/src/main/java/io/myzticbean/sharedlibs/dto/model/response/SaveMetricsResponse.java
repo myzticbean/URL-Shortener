@@ -1,7 +1,7 @@
-package io.myzticbean.urlshortenerdbservice.dto;
+package io.myzticbean.sharedlibs.dto.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.myzticbean.urlshortenerdbservice.entity.model.VisitInfo;
+import io.myzticbean.sharedlibs.dto.model.VisitInfo;
 
 import java.util.Set;
 

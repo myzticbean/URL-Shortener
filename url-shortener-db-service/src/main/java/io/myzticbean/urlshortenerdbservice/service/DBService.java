@@ -1,13 +1,14 @@
 package io.myzticbean.urlshortenerdbservice.service;
 
-import io.myzticbean.urlshortenerdbservice.dto.AddShortenedUrlResponse;
-import io.myzticbean.urlshortenerdbservice.dto.SaveMetricsRequest;
-import io.myzticbean.urlshortenerdbservice.dto.SaveMetricsResponse;
-import io.myzticbean.urlshortenerdbservice.dto.SaveShortenedUrlRequest;
-import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.GeoInfo;
+import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.VisitInfo;
+import io.myzticbean.sharedlibs.dto.model.request.SaveMetricsRequest;
+import io.myzticbean.sharedlibs.dto.model.request.SaveShortenedUrlRequest;
+import io.myzticbean.sharedlibs.dto.model.response.SaveMetricsResponse;
+import io.myzticbean.sharedlibs.dto.model.response.SaveShortenedUrlResponse;
+import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrlDAO;
 import io.myzticbean.urlshortenerdbservice.entity.UrlMetrics;
-import io.myzticbean.urlshortenerdbservice.entity.model.GeoInfo;
-import io.myzticbean.urlshortenerdbservice.entity.model.VisitInfo;
 import io.myzticbean.urlshortenerdbservice.exception.DBServiceException;
 import io.myzticbean.urlshortenerdbservice.repository.UrlMetricsRepository;
 import io.myzticbean.urlshortenerdbservice.repository.UrlShortenedRepository;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DBService {
@@ -35,10 +37,11 @@ public class DBService {
         this.urlMetricsRepo = urlMetricsRepo;
     }
 
-    private List<ShortenedUrl> findByShortCode(String shortCode) throws DBServiceException {
+    private List<ShortenedUrlDAO> findByShortCode(String shortCode) throws DBServiceException {
         try {
-            List<ShortenedUrl> shortenedUrls = urlShortenedRepo.findByShortCode(shortCode);
+            List<ShortenedUrlDAO> shortenedUrls = urlShortenedRepo.findByShortCode(shortCode);
             shortenedUrls.forEach(logger::info);
+            //return shortenedUrls.stream().map(this::mapDaoToDto).collect(Collectors.toList());
             return shortenedUrls;
         } catch(DBServiceException e) {
             logger.error(e);
@@ -46,9 +49,9 @@ public class DBService {
         }
     }
 
-    private List<ShortenedUrl> findByUrl(String fullUrl) throws DBServiceException {
+    private List<ShortenedUrlDAO> findByUrl(String fullUrl) throws DBServiceException {
         try {
-            List<ShortenedUrl> shortenedUrls = urlShortenedRepo.findByFullUrl(fullUrl);
+            List<ShortenedUrlDAO> shortenedUrls = urlShortenedRepo.findByFullUrl(fullUrl);
             shortenedUrls.forEach(logger::info);
             return shortenedUrls;
         } catch (DBServiceException e) {
@@ -60,37 +63,38 @@ public class DBService {
 
     @Nullable
     public ShortenedUrl findFirstByShortCode(String shortCode) throws DBServiceException {
-        List<ShortenedUrl> shortenedUrls = urlShortenedRepo.findByShortCode(shortCode);
+        List<ShortenedUrlDAO> shortenedUrls = urlShortenedRepo.findByShortCode(shortCode);
         shortenedUrls.forEach(logger::info);
         if(shortenedUrls.isEmpty()) {
             return null;
         } else {
-            return shortenedUrls.get(0);
+            // return shortenedUrls.get(0);
+            return mapDaoToDto(shortenedUrls.getFirst());
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public AddShortenedUrlResponse createShortenedUrlIfNotExist(SaveShortenedUrlRequest dbServiceRequest) throws DBServiceException {
-        ShortenedUrl shortenedUrl = mapFromDto(dbServiceRequest);
+    public SaveShortenedUrlResponse createShortenedUrlIfNotExist(SaveShortenedUrlRequest dbServiceRequest) throws DBServiceException {
+        ShortenedUrlDAO shortenedUrlDAO = mapToDaoFromRequest(dbServiceRequest);
         // first check if the full url is already added with another short code
-        List<ShortenedUrl> shortenedUrls = null;
-        if(shortenedUrl.getFullUrl() != null) {
-            shortenedUrls = findByUrl(shortenedUrl.getFullUrl());
-            if(!shortenedUrls.isEmpty()) {
+        List<ShortenedUrlDAO> shortenedUrlDAOS = null;
+        if(shortenedUrlDAO.getFullUrl() != null) {
+            shortenedUrlDAOS = findByUrl(shortenedUrlDAO.getFullUrl());
+            if(!shortenedUrlDAOS.isEmpty()) {
                 // full url already exists -> respond with existing short code
                 logger.info("FullUrl already exists");
-                return mapToDto(shortenedUrls.get(0), false, true);
+                return mapToRequest(mapDaoToDto(shortenedUrlDAOS.getFirst()), false, true);
             } else {
                 // now check if the short code already exists
-                if(shortenedUrl.getShortCode() != null) {
-                    shortenedUrls = findByShortCode(shortenedUrl.getShortCode());
-                    if (!shortenedUrls.isEmpty()) {
+                if(shortenedUrlDAO.getShortCode() != null) {
+                    shortenedUrlDAOS = findByShortCode(shortenedUrlDAO.getShortCode());
+                    if (!shortenedUrlDAOS.isEmpty()) {
                         // short code already exists -> respond with the currently stored full url
                         logger.info("ShortCode already exists");
-                        return mapToDto(shortenedUrls.get(0), false, false);
+                        return mapToRequest(mapDaoToDto(shortenedUrlDAOS.getFirst()), false, false);
                     } else {
                         // everything unique -> create new record
-                        return mapToDto(urlShortenedRepo.save(shortenedUrl), true, false);
+                        return mapToRequest(urlShortenedRepo.save(shortenedUrlDAO), true, false);
                     }
                 } else
                     throw new DBServiceException("Could not find short code in request");
@@ -200,11 +204,19 @@ public class DBService {
         }*/
     }
 
-    private ShortenedUrl mapFromDto(SaveShortenedUrlRequest saveShortenedUrlRequest) {
-        return new ShortenedUrl(saveShortenedUrlRequest.getShortCode(), saveShortenedUrlRequest.getFullUrl(), saveShortenedUrlRequest.getExpiresAfterInDays());
+    private ShortenedUrlDAO mapToDaoFromRequest(SaveShortenedUrlRequest saveShortenedUrlRequest) {
+        return new ShortenedUrlDAO(saveShortenedUrlRequest.getShortCode(), saveShortenedUrlRequest.getFullUrl(), saveShortenedUrlRequest.getExpiresAfterInDays());
     }
 
-    private AddShortenedUrlResponse mapToDto(ShortenedUrl shortenedUrl, boolean createdNew, boolean duplicate) {
-        return new AddShortenedUrlResponse(shortenedUrl, createdNew, duplicate);
+    private SaveShortenedUrlResponse mapToRequest(ShortenedUrl shortenedUrl, boolean createdNew, boolean duplicate) {
+        return new SaveShortenedUrlResponse(shortenedUrl, createdNew, duplicate);
+    }
+
+    private SaveShortenedUrlResponse mapToRequest(ShortenedUrlDAO shortenedUrl, boolean createdNew, boolean duplicate) {
+        return new SaveShortenedUrlResponse(mapDaoToDto(shortenedUrl), createdNew, duplicate);
+    }
+
+    private ShortenedUrl mapDaoToDto(ShortenedUrlDAO dao) {
+        return ShortenedUrl.builder().shortCode(dao.getShortCode()).fullUrl(dao.getFullUrl()).createdAt(dao.getCreatedAt()).expiresOn(dao.getExpiresOn()).build();
     }
 }

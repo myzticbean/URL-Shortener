@@ -1,7 +1,7 @@
 package io.myzticbean.urlshortenermetrics.controller;
 
-import io.myzticbean.urlshortenermetrics.dto.AddMetricsRequest;
-import io.myzticbean.urlshortenermetrics.dto.AddMetricsResponse;
+import io.myzticbean.sharedlibs.dto.model.request.AddMetricsRequest;
+import io.myzticbean.sharedlibs.dto.model.response.AddMetricsResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ public class MetricController {
     @PostMapping("/add-metrics")
     public ResponseEntity<AddMetricsResponse> addMetrics(@RequestBody AddMetricsRequest request) {
         // @TODO: add logic
+
         return null;
     }
 

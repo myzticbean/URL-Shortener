@@ -17,18 +17,18 @@ This project aims to simplify the sharing and tracking of URLs, making them easi
 
 ## Feature Roadmap 🛣️
 ### URL Shortener Service
-- [ ] Setup call to metrics-service every time the URL is visited
+- [ ] Setup call to metrics-service via Kafka every time the URL is visited
 - [ ] Setup Feign client calling metrics-service
 - [ ] Handle invalid URLs
 - [ ] Custom short codes
 - [ ] Activate deactivated shortcode if new add-url-request comes for existing deactivated url
 ### DB Service
-- [ ] Setup endpoint to process add-metrics
+- [x] Setup endpoint to process add-metrics
 - [x] Add logic to save URL metrics to DB
 ### Metrics Service
 - [x] Setup metrics service
 - [x] Setup Kafka service to consume add-metrics messages from url-shortener-service
-- [ ] Setup Feign client calling DB service
+- [x] Setup Feign client calling DB service
 - [ ] Setup metrics logic for URL visit
 ### Future
 - [ ] Add swagger

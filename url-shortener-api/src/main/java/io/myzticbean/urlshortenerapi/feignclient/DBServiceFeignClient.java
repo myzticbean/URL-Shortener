@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "dbService", url = "localhost:8082/api/db-service/v1")
-public interface UrlShortenerDBServiceClient {
+public interface DBServiceFeignClient {
 
     @GetMapping("/get/{shortCode}")
     ResponseEntity<GetShortenedUrlResponse> getShortenedUrl(@PathVariable String shortCode);

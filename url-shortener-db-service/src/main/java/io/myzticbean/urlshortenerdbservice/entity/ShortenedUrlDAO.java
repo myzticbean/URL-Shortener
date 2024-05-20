@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ShortenedUrl {
+public class ShortenedUrlDAO {
 
     @Id
     private String id;
@@ -30,13 +30,13 @@ public class ShortenedUrl {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime expiresOn;
 
-    public ShortenedUrl(String shortCode, String fullUrl) {
+    public ShortenedUrlDAO(String shortCode, String fullUrl) {
         this.shortCode = shortCode;
         this.fullUrl = fullUrl;
         this.createdAt = LocalDateTime.now();
     }
 
-    public ShortenedUrl(String shortCode, String fullUrl, Long daysAfterToday) {
+    public ShortenedUrlDAO(String shortCode, String fullUrl, Long daysAfterToday) {
         this.shortCode = shortCode;
         this.fullUrl = fullUrl;
         this.createdAt = LocalDateTime.now();
