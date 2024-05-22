@@ -1,14 +1,15 @@
 package io.myzticbean.urlshortenerapi;
 
-import io.myzticbean.sharedlibs.dto.model.request.AddMetricsRequest;
 import io.myzticbean.urlshortenerapi.service.kafka.KafkaProducerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @EnableFeignClients
+@EnableRetry
 public class UrlShortenerApiApplication implements CommandLineRunner {
 
 	private final KafkaProducerService kafkaProducerService;

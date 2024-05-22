@@ -6,7 +6,6 @@ import io.myzticbean.sharedlibs.dto.model.request.SaveShortenedUrlRequest;
 import io.myzticbean.sharedlibs.dto.model.response.GetShortenedUrlResponse;
 import io.myzticbean.sharedlibs.dto.model.response.SaveMetricsResponse;
 import io.myzticbean.sharedlibs.dto.model.response.SaveShortenedUrlResponse;
-import io.myzticbean.urlshortenerdbservice.entity.ShortenedUrlDAO;
 import io.myzticbean.urlshortenerdbservice.exception.DBServiceException;
 import io.myzticbean.urlshortenerdbservice.service.DBService;
 import org.apache.logging.log4j.LogManager;

@@ -7,7 +7,7 @@ import io.myzticbean.sharedlibs.dto.model.response.AddShortenedUrlResponse;
 import io.myzticbean.sharedlibs.dto.model.response.GetShortenedUrlResponse;
 import io.myzticbean.sharedlibs.dto.model.response.ShortenUrlResponse;
 import io.myzticbean.urlshortenerapi.exception.UrlShortenerException;
-import io.myzticbean.urlshortenerapi.feignclient.DBServiceFeignClient;
+import io.myzticbean.urlshortenerapi.feignclient.dbservice.DBServiceFeignClient;
 import io.myzticbean.urlshortenerapi.util.Base64Util;
 import jakarta.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
