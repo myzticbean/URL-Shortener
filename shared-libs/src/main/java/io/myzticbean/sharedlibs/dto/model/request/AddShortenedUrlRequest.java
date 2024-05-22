@@ -1,4 +1,4 @@
-package io.myzticbean.urlshortenerapi.dto;
+package io.myzticbean.sharedlibs.dto.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

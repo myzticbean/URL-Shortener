@@ -1,7 +1,7 @@
 package io.myzticbean.urlshortenerapi.controller;
 
-import io.myzticbean.urlshortenerapi.dto.ShortenUrlRequest;
-import io.myzticbean.urlshortenerapi.dto.ShortenUrlResponse;
+import io.myzticbean.sharedlibs.dto.model.request.ShortenUrlRequest;
+import io.myzticbean.sharedlibs.dto.model.response.ShortenUrlResponse;
 import io.myzticbean.urlshortenerapi.service.ShortenUrlService;
 import io.myzticbean.urlshortenerapi.util.IpUtil;
 import jakarta.servlet.http.HttpServletRequest;

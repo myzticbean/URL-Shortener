@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -26,10 +27,13 @@ public class GeoIPUtil {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    @Value("${url-shortener-metrics-api.geoIpDb-location}")
+    private String geoIpDbLocation;
+
     private static final Logger logger = LogManager.getLogger(GeoIPUtil.class);
 
     @PostConstruct
-    public void initialize() {
+    private void initialize() {
         try {
             String dbLocation = "classpath:GeoIPDB/GeoLite2-City.mmdb";
             Resource resource = resourceLoader.getResource(dbLocation);
@@ -37,7 +41,7 @@ public class GeoIPUtil {
             logger.warn(database.getAbsolutePath());
             dbReader = new DatabaseReader.Builder(database).build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
 
@@ -57,7 +61,7 @@ public class GeoIPUtil {
         } catch (GeoIp2Exception ee) {
             logger.error(ee.getMessage(), ee);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
         return null;
     }

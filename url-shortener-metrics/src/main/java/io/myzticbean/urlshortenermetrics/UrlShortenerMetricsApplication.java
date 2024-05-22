@@ -6,17 +6,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @EnableFeignClients
+@EnableRetry
 public class UrlShortenerMetricsApplication implements CommandLineRunner {
-
-	@Autowired
-	private GeoIPUtil geoIPUtil;
 
 	@Override
 	public void run(String... args) throws Exception {
-		geoIPUtil.findGeoDetailsFromIpAddress("49.43.201.142");
+
 	}
 
 	public static void main(String[] args) {

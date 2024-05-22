@@ -1,6 +1,11 @@
 package io.myzticbean.urlshortenerapi.service;
 
-import io.myzticbean.urlshortenerapi.dto.*;
+import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
+import io.myzticbean.sharedlibs.dto.model.request.AddShortenedUrlRequest;
+import io.myzticbean.sharedlibs.dto.model.request.ShortenUrlRequest;
+import io.myzticbean.sharedlibs.dto.model.response.AddShortenedUrlResponse;
+import io.myzticbean.sharedlibs.dto.model.response.GetShortenedUrlResponse;
+import io.myzticbean.sharedlibs.dto.model.response.ShortenUrlResponse;
 import io.myzticbean.urlshortenerapi.exception.UrlShortenerException;
 import io.myzticbean.urlshortenerapi.feignclient.DBServiceFeignClient;
 import io.myzticbean.urlshortenerapi.util.Base64Util;
@@ -97,7 +102,7 @@ public class ShortenUrlService {
                             && checkShortCodeMatch(request, responseBody.getShortenedUrl())) {
                         retryCounter.set(retryCounter.get() + 1);
                         response = dbServiceClient.addShortCodeToDB(request);
-                        logger.warn("Retry #" + retryCounter.get() + " >> DB call to add shortCode returned HttpStatus: {}", response.getStatusCode());
+                        logger.warn("Retry #{} >> DB call to add shortCode returned HttpStatus: {}", retryCounter.get(), response.getStatusCode());
                     }
                     if(retryCounter.get() >= SHORT_CODE_COLLISION_RETRY_COUNT) {
                         return mapToDto(response.getBody(), "Could not add the url, short code collision retry exceeded");

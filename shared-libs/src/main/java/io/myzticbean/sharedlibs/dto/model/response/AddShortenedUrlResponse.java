@@ -1,5 +1,6 @@
-package io.myzticbean.urlshortenerapi.dto;
+package io.myzticbean.sharedlibs.dto.model.response;
 
+import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

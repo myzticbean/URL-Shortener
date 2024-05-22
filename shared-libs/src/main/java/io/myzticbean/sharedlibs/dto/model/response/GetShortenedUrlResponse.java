@@ -2,11 +2,10 @@ package io.myzticbean.sharedlibs.dto.model.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.myzticbean.sharedlibs.dto.model.ShortenedUrl;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter @Builder
+@Getter @Setter @Builder @NoArgsConstructor
+@AllArgsConstructor
 public class GetShortenedUrlResponse {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

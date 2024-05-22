@@ -28,6 +28,14 @@ public class SaveMetricsResponse {
         this.error = error;
     }
 
+    @Override
+    public String toString() {
+        return "SaveMetricsResponse[" +
+                "visitInfos=" + visitInfos +
+                ", error='" + error + '\'' +
+                ']';
+    }
+
     public SaveMetricsResponse() {
     }
 

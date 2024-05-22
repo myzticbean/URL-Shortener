@@ -23,6 +23,6 @@ public class KafkaConsumerService {
     public void receiveMessage(AddMetricsRequest message) {
         // Process the received message
         logger.info("Received message: {}", message);
-
+        metricService.addMetricsToDB(message);
     }
 }

@@ -23,8 +23,8 @@ public class UrlShortenerApiApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		for(int i = 0; i < 100; i++) {
-			kafkaProducerService.sendMessage(new AddMetricsRequest());
-		}
+//		for(int i = 0; i < 100; i++) {
+//			kafkaProducerService.sendMessage(new AddMetricsRequest());
+//		}
 	}
 }
